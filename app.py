@@ -1,5 +1,12 @@
+import os
 import streamlit as st
 from pipeline import answer_question, load_vector_store
+
+# Load the Groq API key securely from Streamlit Cloud Secrets.
+try:
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+except Exception:
+    pass
 
 st.set_page_config(page_title="Employee Help Desk AI", page_icon="🧑‍💼")
 st.title("🧑‍💼 Zyro Dynamics HR Help Desk")
@@ -52,4 +59,4 @@ if question:
                 })
             except Exception as exc:
                 st.error(f"Something went wrong: {exc}")
-                st.info("Check that Ollama is running and the FAISS index exists.")
+                st.info("Check that GROQ_API_KEY is configured in Streamlit Secrets and the FAISS index exists.")
