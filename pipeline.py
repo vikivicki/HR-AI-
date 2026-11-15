@@ -6,7 +6,7 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda
@@ -14,7 +14,7 @@ from langchain_core.runnables import RunnableLambda
 DATA_DIR = Path(os.getenv("HR_PDF_DIR", "data/hr_policies"))
 INDEX_DIR = Path(os.getenv("FAISS_INDEX_DIR", "."))
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-LLM_MODEL = "llama3.2:1b"
+LLM_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 # This is a starting value, not a universal truth. Calibrate it on in-scope
 # and out-of-scope validation questions before submission.
@@ -141,7 +141,7 @@ def answer_question(question: str, vector_store=None,
         search_kwargs={"k": 4, "fetch_k": 12, "lambda_mult": 0.5}
     )
     prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
-    llm = ChatOllama(model=LLM_MODEL, temperature=0)
+    llm = ChatGroq(model=LLM_MODEL, temperature=0, max_retries=2)
     chain = (
         {
             "context": RunnableLambda(lambda x: format_context(x["docs"])),
