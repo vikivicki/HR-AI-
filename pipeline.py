@@ -12,7 +12,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda
 
 DATA_DIR = Path(os.getenv("HR_PDF_DIR", "data/hr_policies"))
-INDEX_DIR = Path(os.getenv("FAISS_INDEX_DIR", "faiss_index"))
+INDEX_DIR = Path(os.getenv("FAISS_INDEX_DIR", "."))
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 LLM_MODEL = "llama3.2:1b"
 
